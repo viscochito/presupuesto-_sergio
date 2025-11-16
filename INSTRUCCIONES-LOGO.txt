@@ -1,0 +1,48 @@
+═══════════════════════════════════════════════════════════════
+  INSTRUCCIONES PARA AGREGAR EL LOGO DE RH PISOS INDUSTRIALES
+═══════════════════════════════════════════════════════════════
+
+📁 PASO 1: Crear la carpeta public (si no existe)
+   
+   En la raíz del proyecto, crea una carpeta llamada "public"
+   
+   Ruta completa: C:\Users\alexi\Presupuesto_Sergio\public\
+
+
+📁 PASO 2: Colocar el logo
+
+   Coloca tu imagen del logo en:
+   
+   📄 public/logo.png
+   
+   IMPORTANTE:
+   - El nombre debe ser exactamente: logo.png
+   - Debe estar en la carpeta "public" (no en "src")
+   - Formatos soportados: PNG (recomendado), JPG
+
+
+✅ PASO 3: Verificar
+
+   Una vez colocado el logo:
+   
+   1. El logo aparecerá en la pestaña del navegador (favicon)
+   2. El logo aparecerá en el encabezado de la página
+   3. El logo aparecerá en la previsualización del presupuesto
+   4. El logo se incluirá automáticamente en el PDF generado
+
+
+🔄 Si el logo no aparece:
+
+   - Verifica que el archivo esté en: public/logo.png
+   - Verifica que el nombre sea exactamente "logo.png" (minúsculas)
+   - Reinicia el servidor: Ctrl+C y luego npm run dev
+   - Limpia la caché del navegador: Ctrl+Shift+R
+
+
+📝 Nota:
+
+   Si el logo no se carga, el sistema mostrará automáticamente
+   un logo de respaldo con "RH PISOS INDUSTRIALES"
+
+═══════════════════════════════════════════════════════════════
+
