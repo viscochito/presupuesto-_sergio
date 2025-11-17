@@ -91,7 +91,6 @@ export const HomePage = () => {
 
           {/* Tabla de Items */}
           <TablaItems 
-            mostrarGestionMateriales={mostrarGestionMateriales}
             onToggleGestionMateriales={() => setMostrarGestionMateriales(!mostrarGestionMateriales)}
           />
 

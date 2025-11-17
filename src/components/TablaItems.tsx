@@ -11,11 +11,10 @@ interface MaterialSeleccionado {
 }
 
 interface TablaItemsProps {
-  mostrarGestionMateriales?: boolean;
   onToggleGestionMateriales?: () => void;
 }
 
-export const TablaItems = ({ mostrarGestionMateriales = false, onToggleGestionMateriales }: TablaItemsProps) => {
+export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
   const { items, addItem, updateItem, removeItem } = usePresupuestoStore();
   const [materialesSeleccionados, setMaterialesSeleccionados] = useState<
     Map<string, MaterialSeleccionado>
