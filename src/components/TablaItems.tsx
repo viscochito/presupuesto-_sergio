@@ -26,6 +26,29 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
 
   const { buscarMateriales, getMateriales } = useMaterialesStore();
 
+  // Cargar todos los materiales disponibles al montar el componente
+  useEffect(() => {
+    const todosLosMateriales = getMateriales();
+    const materialesDisponibles = filtrarMaterialesDisponibles(todosLosMateriales);
+    setMaterialesFiltrados(materialesDisponibles);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Actualizar materiales filtrados cuando cambian los materiales seleccionados
+  useEffect(() => {
+    const todosLosMateriales = getMateriales();
+    const materialesDisponibles = filtrarMaterialesDisponibles(todosLosMateriales);
+    // Si hay búsqueda activa, filtrar también por búsqueda
+    if (busquedaMaterial.trim().length > 0) {
+      const resultados = buscarMateriales(busquedaMaterial);
+      const filtrados = filtrarMaterialesDisponibles(resultados);
+      setMaterialesFiltrados(filtrados);
+    } else {
+      setMaterialesFiltrados(materialesDisponibles);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [materialesSeleccionados]);
+
   // Cerrar dropdown cuando se hace clic fuera del contenedor
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -57,25 +80,23 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
       // Filtrar materiales ya seleccionados
       const materialesDisponibles = filtrarMaterialesDisponibles(resultados);
       setMaterialesFiltrados(materialesDisponibles);
-      setMostrarDropdown(true);
     } else {
       // Si no hay búsqueda, mostrar todos los materiales no seleccionados
       const todosLosMateriales = getMateriales();
       const materialesDisponibles = filtrarMaterialesDisponibles(todosLosMateriales);
       setMaterialesFiltrados(materialesDisponibles);
-      // Mantener el dropdown abierto si ya estaba abierto
-      if (mostrarDropdown) {
-        setMostrarDropdown(true);
-      }
     }
   };
 
-  const handleFocusInput = () => {
-    // Al hacer clic en el input, mostrar todos los materiales no seleccionados
-    const todosLosMateriales = getMateriales();
-    const materialesDisponibles = filtrarMaterialesDisponibles(todosLosMateriales);
-    setMaterialesFiltrados(materialesDisponibles);
-    setMostrarDropdown(true);
+  const handleToggleDropdown = () => {
+    if (!mostrarDropdown) {
+      // Al abrir el dropdown, cargar todos los materiales disponibles
+      const todosLosMateriales = getMateriales();
+      const materialesDisponibles = filtrarMaterialesDisponibles(todosLosMateriales);
+      setMaterialesFiltrados(materialesDisponibles);
+      setBusquedaMaterial(''); // Limpiar búsqueda al abrir
+    }
+    setMostrarDropdown(!mostrarDropdown);
   };
 
   const handleToggleMaterial = (material: Material) => {
@@ -201,46 +222,82 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
           Agregar Items (Selección Múltiple)
         </h3>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Buscar Materiales *
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Seleccionar Materiales *
           </label>
           <div className="relative" ref={dropdownRef}>
-            <input
-              type="text"
-              value={busquedaMaterial}
-              onChange={(e) => handleBuscarMaterial(e.target.value)}
-              onFocus={handleFocusInput}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Buscar por código o descripción..."
-            />
-            {mostrarDropdown && materialesFiltrados.length > 0 && (
-              <div className="absolute z-30 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto">
-                {materialesFiltrados.map((material) => (
-                  <div
-                    key={material.codigo}
-                    className={`px-4 py-2 border-b border-gray-100 ${
-                      estaSeleccionado(material.codigo)
-                        ? 'bg-blue-100'
-                        : 'hover:bg-gray-50'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        checked={estaSeleccionado(material.codigo)}
-                        onChange={() => handleToggleMaterial(material)}
-                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                      />
-                      <div className="flex-1">
-                        <div className="font-semibold text-sm">{material.codigo}</div>
-                        <div className="text-xs text-gray-600">{material.descripcion}</div>
-                        <div className="text-xs text-blue-600 font-semibold">
-                          {formatearMoneda(material.precioUnitario)} / {material.unidad}
+            {/* Botón para abrir/cerrar el desplegable */}
+            <button
+              type="button"
+              onClick={handleToggleDropdown}
+              className="w-full px-4 py-3 bg-white border-2 border-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-50 transition-colors text-left flex items-center justify-between"
+            >
+              <span className="text-sm sm:text-base text-gray-700">
+                {mostrarDropdown ? 'Ocultar lista de materiales' : 'Ver lista de materiales disponibles'}
+              </span>
+              <svg
+                className={`w-5 h-5 text-gray-500 transition-transform ${mostrarDropdown ? 'transform rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {/* Dropdown con lista de materiales */}
+            {mostrarDropdown && (
+              <div className="absolute z-30 w-full mt-2 bg-white border-2 border-blue-500 rounded-md shadow-xl max-h-96 overflow-y-auto">
+                {/* Campo de búsqueda opcional dentro del dropdown */}
+                <div className="sticky top-0 bg-white border-b border-gray-200 p-3">
+                  <input
+                    type="text"
+                    value={busquedaMaterial}
+                    onChange={(e) => handleBuscarMaterial(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    placeholder="Buscar por código o descripción (opcional)..."
+                  />
+                </div>
+
+                {/* Lista de materiales */}
+                {materialesFiltrados.length > 0 ? (
+                  <div className="max-h-80 overflow-y-auto">
+                    {materialesFiltrados.map((material) => (
+                      <div
+                        key={material.codigo}
+                        className={`px-4 py-3 border-b border-gray-100 cursor-pointer ${
+                          estaSeleccionado(material.codigo)
+                            ? 'bg-blue-100'
+                            : 'hover:bg-gray-50'
+                        }`}
+                        onClick={() => handleToggleMaterial(material)}
+                      >
+                        <div className="flex items-start gap-3">
+                          <input
+                            type="checkbox"
+                            checked={estaSeleccionado(material.codigo)}
+                            onChange={() => handleToggleMaterial(material)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-4 h-4 mt-0.5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 flex-shrink-0"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="font-semibold text-sm text-gray-900">{material.codigo}</div>
+                            <div className="text-xs sm:text-sm text-gray-600 mt-1">{material.descripcion}</div>
+                            <div className="text-xs text-blue-600 font-semibold mt-1">
+                              {formatearMoneda(material.precioUnitario)} / {material.unidad}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
+                ) : (
+                  <div className="p-4 text-center text-sm text-gray-500">
+                    {busquedaMaterial.trim().length > 0
+                      ? 'No se encontraron materiales con ese criterio'
+                      : 'No hay materiales disponibles (todos ya fueron seleccionados)'}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -257,13 +314,9 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
                 onClick={() => {
                   setMaterialesSeleccionados(new Map());
                   // Actualizar la lista para mostrar todos los materiales de nuevo
-                  if (busquedaMaterial.trim().length > 0) {
-                    const resultados = buscarMateriales(busquedaMaterial);
-                    setMaterialesFiltrados(resultados);
-                  } else {
-                    const todosLosMateriales = getMateriales();
-                    setMaterialesFiltrados(todosLosMateriales);
-                  }
+                  const todosLosMateriales = getMateriales();
+                  setMaterialesFiltrados(todosLosMateriales);
+                  setBusquedaMaterial('');
                 }}
                 className="text-xs text-red-600 hover:text-red-800 font-medium"
               >
