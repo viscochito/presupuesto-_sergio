@@ -255,7 +255,7 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
                     value={busquedaMaterial}
                     onChange={(e) => handleBuscarMaterial(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                    placeholder="Buscar por código o descripción (opcional)..."
+                    placeholder="Buscar por código (opcional)..."
                   />
                 </div>
 
@@ -282,7 +282,6 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
                           />
                           <div className="flex-1 min-w-0">
                             <div className="font-semibold text-sm text-gray-900">{material.codigo}</div>
-                            <div className="text-xs sm:text-sm text-gray-600 mt-1">{material.descripcion}</div>
                             <div className="text-xs text-blue-600 font-semibold mt-1">
                               {formatearMoneda(material.precioUnitario)} / {material.unidad}
                             </div>
