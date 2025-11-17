@@ -5,6 +5,9 @@ import {
   calcularSubtotalGeneral,
   calcularTotal,
   obtenerCantidadItems,
+  calcularDescuentoGeneral,
+  calcularPrecioNeto,
+  calcularImpuestos,
 } from '../utils/calculations';
 
 interface PresupuestoState {
@@ -14,11 +17,17 @@ interface PresupuestoState {
   numeroPresupuesto: string;
   vendedor: string;
   fechaVencimiento: string;
+  descuentoGeneral: number; // Porcentaje de descuento general (0-100)
+  porcentajeIva: number; // Porcentaje de IVA (0-100)
+  condiciones: string; // Texto breve de condiciones
   
   // Actions
   setCliente: (cliente: Cliente) => void;
   setVendedor: (vendedor: string) => void;
   setFechaVencimiento: (fecha: string) => void;
+  setDescuentoGeneral: (descuento: number) => void;
+  setPorcentajeIva: (iva: number) => void;
+  setCondiciones: (condiciones: string) => void;
   generarNumeroPresupuesto: () => string;
   addItem: (item: Omit<Item, 'id' | 'subtotal'>) => void;
   updateItem: (id: string, item: Partial<Omit<Item, 'id'>>) => void;
@@ -58,6 +67,9 @@ export const usePresupuestoStore = create<PresupuestoState>((set, get) => ({
   numeroPresupuesto: generarNumeroPresupuesto(),
   vendedor: '',
   fechaVencimiento: '',
+  descuentoGeneral: 0,
+  porcentajeIva: 21, // IVA por defecto 21%
+  condiciones: 'Duración del trabajo: 2 DIAS\nAdelanto el 50% y el resto al finalizar el trabajo',
 
   setCliente: (cliente) => {
     set({ cliente });
@@ -71,6 +83,18 @@ export const usePresupuestoStore = create<PresupuestoState>((set, get) => ({
     set({ fechaVencimiento: fecha });
   },
 
+  setDescuentoGeneral: (descuento) => {
+    set({ descuentoGeneral: descuento });
+  },
+
+  setPorcentajeIva: (iva) => {
+    set({ porcentajeIva: iva });
+  },
+
+  setCondiciones: (condiciones) => {
+    set({ condiciones });
+  },
+
   generarNumeroPresupuesto: () => {
     const nuevoNumero = generarNumeroPresupuesto();
     set({ numeroPresupuesto: nuevoNumero });
@@ -78,18 +102,46 @@ export const usePresupuestoStore = create<PresupuestoState>((set, get) => ({
   },
 
   addItem: (itemData) => {
-    const nuevoItem: Item = {
-      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
-      ...itemData,
-      subtotal: calcularSubtotal(
-        itemData.cantidad,
-        itemData.precioUnitario,
-        itemData.descuento
-      ),
-    };
-    set((state) => ({
-      items: [...state.items, nuevoItem],
-    }));
+    set((state) => {
+      // Verificar si ya existe un item con el mismo codigoMaterial
+      const itemExistente = state.items.find(
+        (item) => item.codigoMaterial === itemData.codigoMaterial
+      );
+
+      if (itemExistente) {
+        // Si existe, sumar la cantidad al item existente
+        const nuevaCantidad = itemExistente.cantidad + itemData.cantidad;
+        const itemsActualizados = state.items.map((item) => {
+          if (item.id === itemExistente.id) {
+            const updated = {
+              ...item,
+              cantidad: nuevaCantidad,
+            };
+            // Recalcular subtotal con la nueva cantidad
+            updated.subtotal = calcularSubtotal(
+              updated.cantidad,
+              updated.precioUnitario,
+              updated.descuento
+            );
+            return updated;
+          }
+          return item;
+        });
+        return { items: itemsActualizados };
+      } else {
+        // Si no existe, crear un nuevo item
+        const nuevoItem: Item = {
+          id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+          ...itemData,
+          subtotal: calcularSubtotal(
+            itemData.cantidad,
+            itemData.precioUnitario,
+            itemData.descuento
+          ),
+        };
+        return { items: [...state.items, nuevoItem] };
+      }
+    });
   },
 
   updateItem: (id, itemData) => {
@@ -123,13 +175,25 @@ export const usePresupuestoStore = create<PresupuestoState>((set, get) => ({
   },
 
   calcularPresupuesto: () => {
-    const { cliente, items, numeroPresupuesto, vendedor, fechaVencimiento } = get();
+    const { 
+      cliente, 
+      items, 
+      numeroPresupuesto, 
+      vendedor, 
+      fechaVencimiento,
+      descuentoGeneral,
+      porcentajeIva,
+      condiciones,
+    } = get();
     if (!cliente || items.length === 0) {
       return;
     }
 
     const subtotalGeneral = calcularSubtotalGeneral(items);
-    const total = calcularTotal(subtotalGeneral);
+    const montoDescuento = calcularDescuentoGeneral(subtotalGeneral, descuentoGeneral);
+    const precioNeto = calcularPrecioNeto(subtotalGeneral, descuentoGeneral);
+    const impuestos = calcularImpuestos(precioNeto, porcentajeIva);
+    const total = calcularTotal(subtotalGeneral, descuentoGeneral, porcentajeIva);
     const cantidadItems = obtenerCantidadItems(items);
 
     const presupuesto: Presupuesto = {
@@ -138,9 +202,15 @@ export const usePresupuestoStore = create<PresupuestoState>((set, get) => ({
       vendedor: vendedor || undefined,
       items,
       subtotalGeneral,
+      descuentoGeneral,
+      montoDescuento,
+      precioNeto,
+      impuestos,
+      porcentajeIva,
       total,
       cantidadItems,
       fechaVencimiento: fechaVencimiento || undefined,
+      condiciones,
     };
 
     set({ presupuesto });
@@ -154,6 +224,9 @@ export const usePresupuestoStore = create<PresupuestoState>((set, get) => ({
       numeroPresupuesto: generarNumeroPresupuesto(),
       vendedor: '',
       fechaVencimiento: '',
+      descuentoGeneral: 0,
+      porcentajeIva: 21,
+      condiciones: 'Duración del trabajo: 2 DIAS\nAdelanto el 50% y el resto al finalizar el trabajo',
     });
   },
 

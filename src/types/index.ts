@@ -7,8 +7,8 @@ export interface Cliente {
   telefono: string;
   fecha: string;
   condicionIva: string;
-  cuit: string;
-  observaciones: string;
+  cuit?: string;
+  observaciones?: string;
 }
 
 export interface Item {
@@ -27,9 +27,15 @@ export interface Presupuesto {
   vendedor?: string;
   items: Item[];
   subtotalGeneral: number;
+  descuentoGeneral?: number;
+  montoDescuento?: number;
+  precioNeto?: number;
+  impuestos?: number;
+  porcentajeIva?: number;
   total: number;
   cantidadItems: number;
   fechaVencimiento?: string;
+  condiciones?: string;
 }
 
 export type CondicionIVA = 

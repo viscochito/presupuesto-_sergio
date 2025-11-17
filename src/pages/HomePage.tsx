@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FormularioCliente } from '../components/FormularioCliente';
 import { TablaItems } from '../components/TablaItems';
 import { PreviewPresupuesto } from '../components/PreviewPresupuesto';
@@ -12,13 +12,21 @@ export const HomePage = () => {
     calcularPresupuesto,
     limpiarTodo,
     presupuesto,
-    vendedor,
-    fechaVencimiento,
-    setVendedor,
-    setFechaVencimiento,
   } = usePresupuestoStore();
   const [mostrarPreview, setMostrarPreview] = useState(false);
   const [mostrarGestionMateriales, setMostrarGestionMateriales] = useState(false);
+
+  // Prevenir scroll del body cuando algún modal está abierto
+  useEffect(() => {
+    if (mostrarPreview || mostrarGestionMateriales) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [mostrarPreview, mostrarGestionMateriales]);
 
   const handleCalcularCotizacion = () => {
     if (items.length === 0) {
@@ -30,7 +38,6 @@ export const HomePage = () => {
     if (cliente) {
       calcularPresupuesto();
       setMostrarPreview(true);
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
   };
 
@@ -43,7 +50,14 @@ export const HomePage = () => {
 
   const handleEditar = () => {
     setMostrarPreview(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCerrarModal = () => {
+    setMostrarPreview(false);
+  };
+
+  const handleCerrarModalMateriales = () => {
+    setMostrarGestionMateriales(false);
   };
 
   return (
@@ -72,61 +86,14 @@ export const HomePage = () => {
         </header>
 
         <div className="space-y-8">
-          {/* Botón para gestionar materiales */}
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <button
-              onClick={() => setMostrarGestionMateriales(!mostrarGestionMateriales)}
-              className="w-full px-6 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors font-semibold"
-            >
-              {mostrarGestionMateriales ? 'Ocultar' : 'Gestionar'} Base de Datos de Materiales
-            </button>
-            <p className="text-sm text-gray-600 mt-2 text-center">
-              Administra precios, descripciones y materiales. Los cambios se guardan automáticamente.
-            </p>
-          </div>
-
-          {/* Gestión de Materiales */}
-          {mostrarGestionMateriales && (
-            <GestionMateriales />
-          )}
-
           {/* Formulario de Cliente */}
           <FormularioCliente />
 
-          {/* Campos adicionales */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">
-              Información Adicional
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Vendedor
-                </label>
-                <input
-                  type="text"
-                  value={vendedor}
-                  onChange={(e) => setVendedor(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Nombre del vendedor"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Fecha de Vencimiento
-                </label>
-                <input
-                  type="date"
-                  value={fechaVencimiento}
-                  onChange={(e) => setFechaVencimiento(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-          </div>
-
           {/* Tabla de Items */}
-          <TablaItems />
+          <TablaItems 
+            mostrarGestionMateriales={mostrarGestionMateriales}
+            onToggleGestionMateriales={() => setMostrarGestionMateriales(!mostrarGestionMateriales)}
+          />
 
           {/* Botones de Acción */}
           <div className="bg-white p-6 rounded-lg shadow-md flex gap-4 justify-center">
@@ -144,14 +111,88 @@ export const HomePage = () => {
             </button>
           </div>
 
-          {/* Preview del Presupuesto */}
-          {mostrarPreview && presupuesto && (
-            <div className="mt-8">
-              <PreviewPresupuesto onEditar={handleEditar} />
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Modal/Overlay para la Previsualización */}
+      {mostrarPreview && presupuesto && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm modal-overlay-enter transition-opacity duration-300"
+          onClick={handleCerrarModal}
+        >
+          <div
+            className="bg-white rounded-lg shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-y-auto relative modal-content-enter transition-all duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Botón de cerrar */}
+            <button
+              onClick={handleCerrarModal}
+              className="absolute top-4 right-4 z-10 text-gray-500 hover:text-gray-700 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
+              aria-label="Cerrar"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Contenido de la previsualización */}
+            <div className="p-4">
+              <PreviewPresupuesto onEditar={handleEditar} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal/Overlay para Gestión de Materiales */}
+      {mostrarGestionMateriales && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm modal-overlay-enter transition-opacity duration-300"
+          onClick={handleCerrarModalMateriales}
+        >
+          <div
+            className="bg-white rounded-lg shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-y-auto relative modal-content-enter transition-all duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Botón de cerrar */}
+            <button
+              onClick={handleCerrarModalMateriales}
+              className="absolute top-4 right-4 z-10 text-gray-500 hover:text-gray-700 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
+              aria-label="Cerrar"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Contenido de gestión de materiales */}
+            <div className="p-4">
+              <GestionMateriales />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useMaterialesStore } from '../store/materialesStore';
 import { Material } from '../data/materiales';
 import { formatearMoneda } from '../utils/formatters';
