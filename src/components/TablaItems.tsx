@@ -418,11 +418,11 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
         <div className="overflow-x-auto">
           <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded text-xs sm:text-sm text-blue-800">
             <strong>ℹ️ Información:</strong> Los precios y descripciones vienen de la base de datos de materiales. 
-            Solo puedes editar la cantidad y el descuento. Para modificar precios, usa la sección "Gestionar Base de Datos de Materiales".
+            Solo puedes editar la cantidad. Para modificar precios, usa la sección "Gestionar Base de Datos de Materiales".
           </div>
           <div className="overflow-x-auto -mx-4 sm:mx-0">
             <div className="inline-block min-w-full align-middle">
-              <table className="w-full border-collapse border border-gray-300 min-w-[800px]">
+              <table className="w-full border-collapse border border-gray-300 min-w-[600px]">
                 <thead>
                   <tr className="bg-gray-100">
                     <th className="border border-gray-300 px-2 sm:px-4 py-2 text-left text-xs sm:text-sm">
@@ -433,9 +433,6 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
                     </th>
                     <th className="border border-gray-300 px-2 sm:px-4 py-2 text-right text-xs sm:text-sm">
                       Precio Uni.
-                    </th>
-                    <th className="border border-gray-300 px-2 sm:px-4 py-2 text-center text-xs sm:text-sm">
-                      % Desc.
                     </th>
                     <th className="border border-gray-300 px-2 sm:px-4 py-2 text-right text-xs sm:text-sm">
                       Subtotal
@@ -506,26 +503,6 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
                         </div>
                         <div className="text-xs text-gray-500 hidden sm:block">
                           (Desde base de datos)
-                        </div>
-                      </td>
-                      <td className="border border-gray-300 px-2 sm:px-4 py-2">
-                        <div className="flex items-center gap-1">
-                          <input
-                            type="number"
-                            min="0"
-                            max="100"
-                            step="0.01"
-                            value={item.descuento}
-                            onChange={(e) =>
-                              handleEditarItem(
-                                item.id,
-                                'descuento',
-                                parseFloat(e.target.value) || 0
-                              )
-                            }
-                            className="w-full px-1 sm:px-2 py-1 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-center text-xs sm:text-sm"
-                          />
-                          <span className="text-gray-500 text-xs">%</span>
                         </div>
                       </td>
                       <td className="border border-gray-300 px-2 sm:px-4 py-2 text-right font-semibold text-xs sm:text-sm">
