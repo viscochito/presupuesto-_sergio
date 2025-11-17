@@ -178,14 +178,14 @@ export const FormularioCliente = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-md">
-      <div className="p-4 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h2 className="text-xl font-bold text-gray-800">
+      <div className="p-3 sm:p-4 border-b border-gray-200">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800">
               Datos del Cliente
             </h2>
             {cliente && cliente.razonSocial && (
-              <div className="text-sm text-green-600 font-semibold bg-green-50 px-3 py-1 rounded">
+              <div className="text-xs sm:text-sm text-green-600 font-semibold bg-green-50 px-2 sm:px-3 py-1 rounded self-start">
                 ✓ Pre-cargados
               </div>
             )}
@@ -198,13 +198,13 @@ export const FormularioCliente = () => {
                 setModo('seleccionar');
               }
             }}
-            className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+            className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 font-medium self-start sm:self-auto"
           >
             {mostrarFormulario ? 'Ocultar' : 'Mostrar/Editar'}
           </button>
         </div>
         {!mostrarFormulario && cliente && cliente.razonSocial && (
-          <div className="mt-3 text-sm text-gray-600">
+          <div className="mt-3 text-xs sm:text-sm text-gray-600">
             <p>
               <span className="font-semibold">Cliente:</span> {cliente.razonSocial}
             </p>
@@ -220,16 +220,16 @@ export const FormularioCliente = () => {
       </div>
 
       {mostrarFormulario && (
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {/* Selector de modo */}
-          <div className="mb-6 flex gap-2">
+          <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row gap-2">
             <button
               type="button"
               onClick={() => {
                 setModo('seleccionar');
                 setBusquedaCliente('');
               }}
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md transition-colors ${
                 modo === 'seleccionar'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -240,7 +240,7 @@ export const FormularioCliente = () => {
             <button
               type="button"
               onClick={handleNuevoCliente}
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md transition-colors ${
                 modo === 'nuevo'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -267,20 +267,20 @@ export const FormularioCliente = () => {
               </div>
 
               {clientesFiltrados.length > 0 ? (
-                <div className="max-h-64 overflow-y-auto border border-gray-200 rounded-md">
-                  <table className="w-full text-sm">
+                <div className="max-h-64 overflow-x-auto overflow-y-auto border border-gray-200 rounded-md">
+                  <table className="w-full text-xs sm:text-sm min-w-[600px]">
                     <thead className="bg-gray-50 sticky top-0">
                       <tr>
-                        <th className="px-3 py-2 text-left font-semibold text-gray-700">
+                        <th className="px-2 sm:px-3 py-2 text-left font-semibold text-gray-700">
                           Razón Social
                         </th>
-                        <th className="px-3 py-2 text-left font-semibold text-gray-700">
+                        <th className="px-2 sm:px-3 py-2 text-left font-semibold text-gray-700">
                           CUIT
                         </th>
-                        <th className="px-3 py-2 text-left font-semibold text-gray-700">
+                        <th className="px-2 sm:px-3 py-2 text-left font-semibold text-gray-700 hidden sm:table-cell">
                           Email
                         </th>
-                        <th className="px-3 py-2 text-left font-semibold text-gray-700">
+                        <th className="px-2 sm:px-3 py-2 text-left font-semibold text-gray-700">
                           Acción
                         </th>
                       </tr>
@@ -291,14 +291,14 @@ export const FormularioCliente = () => {
                           key={clienteGuardado.id}
                           className="border-t border-gray-200 hover:bg-gray-50"
                         >
-                          <td className="px-3 py-2">{clienteGuardado.razonSocial}</td>
-                          <td className="px-3 py-2">{clienteGuardado.cuit || '-'}</td>
-                          <td className="px-3 py-2">{clienteGuardado.email}</td>
-                          <td className="px-3 py-2">
+                          <td className="px-2 sm:px-3 py-2">{clienteGuardado.razonSocial}</td>
+                          <td className="px-2 sm:px-3 py-2">{clienteGuardado.cuit || '-'}</td>
+                          <td className="px-2 sm:px-3 py-2 hidden sm:table-cell">{clienteGuardado.email}</td>
+                          <td className="px-2 sm:px-3 py-2">
                             <button
                               type="button"
                               onClick={() => handleSeleccionarCliente(clienteGuardado)}
-                              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-xs"
+                              className="px-2 sm:px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-xs whitespace-nowrap"
                             >
                               Seleccionar
                             </button>
@@ -489,10 +489,10 @@ export const FormularioCliente = () => {
                 />
               </div>
 
-              <div className="mt-4 flex gap-2">
+              <div className="mt-4 flex flex-col sm:flex-row gap-2">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm sm:text-base"
                 >
                   Guardar Cliente
                 </button>
@@ -502,7 +502,7 @@ export const FormularioCliente = () => {
                     setModo('seleccionar');
                     handleLimpiar();
                   }}
-                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
+                  className="w-full sm:w-auto px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors text-sm sm:text-base"
                 >
                   Cancelar
                 </button>

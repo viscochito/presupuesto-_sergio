@@ -109,15 +109,15 @@ export const GestionMateriales = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
           Gestión de Materiales
         </h2>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <button
             onClick={handleNuevo}
-            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+            className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm sm:text-base"
           >
             + Nuevo Material
           </button>
@@ -128,7 +128,7 @@ export const GestionMateriales = () => {
                 setMaterialesFiltrados(materiales);
               }
             }}
-            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+            className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors text-sm sm:text-base"
           >
             Resetear
           </button>
@@ -154,8 +154,8 @@ export const GestionMateriales = () => {
 
       {/* Formulario de edición/creación */}
       {mostrarFormulario && (
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg border-2 border-blue-300">
-          <h3 className="text-lg font-semibold mb-4 text-gray-700">
+        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-50 rounded-lg border-2 border-blue-300">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">
             {materialEditando ? 'Editar Material' : 'Nuevo Material'}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -229,16 +229,16 @@ export const GestionMateriales = () => {
               </div>
             </div>
           </div>
-          <div className="flex gap-2 mt-4">
+          <div className="flex flex-col sm:flex-row gap-2 mt-4">
             <button
               onClick={handleGuardar}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm sm:text-base"
             >
               {materialEditando ? 'Guardar Cambios' : 'Agregar Material'}
             </button>
             <button
               onClick={handleCancelar}
-              className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
+              className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors text-sm sm:text-base"
             >
               Cancelar
             </button>
@@ -247,60 +247,62 @@ export const GestionMateriales = () => {
       )}
 
       {/* Tabla de materiales */}
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse border border-gray-300">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="border border-gray-300 px-4 py-2 text-left">Código</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Descripción</th>
-              <th className="border border-gray-300 px-4 py-2 text-right">Precio Unitario</th>
-              <th className="border border-gray-300 px-4 py-2 text-center">Unidad</th>
-              <th className="border border-gray-300 px-4 py-2 text-center">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {materialesFiltrados.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="border border-gray-300 px-4 py-8 text-center text-gray-500">
-                  No se encontraron materiales
-                </td>
+      <div className="overflow-x-auto -mx-4 sm:mx-0">
+        <div className="inline-block min-w-full align-middle px-4 sm:px-0">
+          <table className="w-full border-collapse border border-gray-300 min-w-[600px]">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="border border-gray-300 px-2 sm:px-4 py-2 text-left text-xs sm:text-sm">Código</th>
+                <th className="border border-gray-300 px-2 sm:px-4 py-2 text-left text-xs sm:text-sm">Descripción</th>
+                <th className="border border-gray-300 px-2 sm:px-4 py-2 text-right text-xs sm:text-sm">Precio Unitario</th>
+                <th className="border border-gray-300 px-2 sm:px-4 py-2 text-center text-xs sm:text-sm">Unidad</th>
+                <th className="border border-gray-300 px-2 sm:px-4 py-2 text-center text-xs sm:text-sm">Acciones</th>
               </tr>
-            ) : (
-              materialesFiltrados.map((material) => (
-                <tr key={material.codigo} className="hover:bg-gray-50">
-                  <td className="border border-gray-300 px-4 py-2 font-semibold">
-                    {material.codigo}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {material.descripcion}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2 text-right font-semibold">
-                    {formatearMoneda(material.precioUnitario)}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2 text-center">
-                    {material.unidad}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2 text-center">
-                    <div className="flex gap-2 justify-center">
-                      <button
-                        onClick={() => handleEditar(material)}
-                        className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-sm"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => handleEliminar(material.codigo)}
-                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-sm"
-                      >
-                        Eliminar
-                      </button>
-                    </div>
+            </thead>
+            <tbody>
+              {materialesFiltrados.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="border border-gray-300 px-2 sm:px-4 py-6 sm:py-8 text-center text-gray-500 text-xs sm:text-sm">
+                    No se encontraron materiales
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                materialesFiltrados.map((material) => (
+                  <tr key={material.codigo} className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2 font-semibold text-xs sm:text-sm">
+                      {material.codigo}
+                    </td>
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2 text-xs sm:text-sm">
+                      {material.descripcion}
+                    </td>
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2 text-right font-semibold text-xs sm:text-sm">
+                      {formatearMoneda(material.precioUnitario)}
+                    </td>
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2 text-center text-xs sm:text-sm">
+                      {material.unidad}
+                    </td>
+                    <td className="border border-gray-300 px-2 sm:px-4 py-2 text-center">
+                      <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 justify-center">
+                        <button
+                          onClick={() => handleEditar(material)}
+                          className="px-2 sm:px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-xs sm:text-sm whitespace-nowrap"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => handleEliminar(material.codigo)}
+                          className="px-2 sm:px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-xs sm:text-sm whitespace-nowrap"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

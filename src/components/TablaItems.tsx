@@ -180,15 +180,15 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
           Items del Presupuesto
         </h2>
         {onToggleGestionMateriales && (
           <button
             onClick={onToggleGestionMateriales}
-            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors font-semibold text-sm"
+            className="w-full sm:w-auto px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors font-semibold text-xs sm:text-sm"
           >
             Catálogo Materiales
           </button>
@@ -196,8 +196,8 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
       </div>
 
       {/* Formulario para agregar items múltiples */}
-      <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-        <h3 className="text-lg font-semibold mb-4 text-gray-700">
+      <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
+        <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">
           Agregar Items (Selección Múltiple)
         </h3>
         <div className="mb-4">
@@ -248,9 +248,9 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
 
         {/* Lista de materiales seleccionados - Mostrar siempre que haya items seleccionados */}
         {materialesSeleccionados.size > 0 && (
-          <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200 relative z-10">
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="font-semibold text-sm text-gray-700">
+          <div className="mt-4 p-2 sm:p-3 bg-blue-50 rounded-lg border border-blue-200 relative z-10">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-3">
+              <h4 className="font-semibold text-xs sm:text-sm text-gray-700">
                 Materiales Seleccionados ({materialesSeleccionados.size})
               </h4>
               <button
@@ -274,18 +274,18 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
               {Array.from(materialesSeleccionados.values()).map((seleccionado) => (
                 <div
                   key={seleccionado.material.codigo}
-                  className="flex items-center gap-3 p-2 bg-white rounded border border-blue-200"
+                  className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-2 bg-white rounded border border-blue-200"
                 >
-                  <div className="flex-1">
-                    <div className="text-sm font-semibold">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs sm:text-sm font-semibold truncate">
                       {seleccionado.material.codigo}
                     </div>
-                    <div className="text-xs text-gray-600">
+                    <div className="text-xs text-gray-600 truncate">
                       {seleccionado.material.descripcion}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <label className="text-xs text-gray-600">Cantidad:</label>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <label className="text-xs text-gray-600 hidden sm:inline">Cantidad:</label>
                     <div className="flex items-center border border-gray-300 rounded overflow-hidden w-fit">
                       <button
                         type="button"
@@ -295,7 +295,7 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
                             Math.max(0.01, seleccionado.cantidad - 1)
                           )
                         }
-                        className="px-1.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm transition-colors"
+                        className="px-1.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs sm:text-sm transition-colors"
                         title="Disminuir cantidad"
                       >
                         -
@@ -311,7 +311,7 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
                             parseFloat(e.target.value) || 1
                           )
                         }
-                        className="w-14 px-1 py-1 text-sm text-center focus:outline-none focus:ring-1 focus:ring-blue-500 border-0"
+                        className="w-12 sm:w-14 px-1 py-1 text-xs sm:text-sm text-center focus:outline-none focus:ring-1 focus:ring-blue-500 border-0"
                       />
                       <button
                         type="button"
@@ -321,7 +321,7 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
                             seleccionado.cantidad + 1
                           )
                         }
-                        className="px-1.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm transition-colors"
+                        className="px-1.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs sm:text-sm transition-colors"
                         title="Aumentar cantidad"
                       >
                         +
@@ -331,7 +331,7 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
                       onClick={() =>
                         handleEliminarSeleccionado(seleccionado.material.codigo)
                       }
-                      className="text-red-600 hover:text-red-800 text-sm font-bold"
+                      className="text-red-600 hover:text-red-800 text-xs sm:text-sm font-bold"
                       title="Quitar de la selección"
                     >
                       ×
@@ -364,131 +364,135 @@ export const TablaItems = ({ onToggleGestionMateriales }: TablaItemsProps) => {
         </p>
       ) : (
         <div className="overflow-x-auto">
-          <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
+          <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded text-xs sm:text-sm text-blue-800">
             <strong>ℹ️ Información:</strong> Los precios y descripciones vienen de la base de datos de materiales. 
             Solo puedes editar la cantidad y el descuento. Para modificar precios, usa la sección "Gestionar Base de Datos de Materiales".
           </div>
-          <table className="w-full border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-4 py-2 text-left">
-                  Descripción
-                </th>
-                <th className="border border-gray-300 px-4 py-2 text-center">
-                  Cant. (Editable)
-                </th>
-                <th className="border border-gray-300 px-4 py-2 text-right">
-                  Precio Uni.
-                </th>
-                <th className="border border-gray-300 px-4 py-2 text-center">
-                  % Desc. (Editable)
-                </th>
-                <th className="border border-gray-300 px-4 py-2 text-right">
-                  Subtotal (Calculado)
-                </th>
-                <th className="border border-gray-300 px-4 py-2 text-center">
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-50">
-                  <td className="border border-gray-300 px-4 py-2">
-                    <div className="font-medium text-gray-800">{item.descripcion}</div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      (Desde base de datos)
-                    </div>
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <div className="flex items-center border border-gray-200 rounded overflow-hidden w-fit mx-auto">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleEditarItem(
-                            item.id,
-                            'cantidad',
-                            Math.max(0.01, item.cantidad - 1)
-                          )
-                        }
-                        className="px-1.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm transition-colors"
-                        title="Disminuir cantidad"
-                      >
-                        -
-                      </button>
-                      <input
-                        type="number"
-                        min="0.01"
-                        step="0.01"
-                        value={item.cantidad}
-                        onChange={(e) =>
-                          handleEditarItem(
-                            item.id,
-                            'cantidad',
-                            parseFloat(e.target.value) || 0
-                          )
-                        }
-                        className="w-14 px-1 py-1 text-center focus:outline-none focus:ring-1 focus:ring-blue-500 border-0 text-sm"
-                      />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleEditarItem(
-                            item.id,
-                            'cantidad',
-                            item.cantidad + 1
-                          )
-                        }
-                        className="px-1.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm transition-colors"
-                        title="Aumentar cantidad"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2 text-right">
-                    <div className="font-semibold text-gray-800">
-                      {formatearMoneda(item.precioUnitario)}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      (Desde base de datos)
-                    </div>
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <div className="flex items-center gap-1">
-                      <input
-                        type="number"
-                        min="0"
-                        max="100"
-                        step="0.01"
-                        value={item.descuento}
-                        onChange={(e) =>
-                          handleEditarItem(
-                            item.id,
-                            'descuento',
-                            parseFloat(e.target.value) || 0
-                          )
-                        }
-                        className="w-full px-2 py-1 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-center"
-                      />
-                      <span className="text-gray-500 text-xs">%</span>
-                    </div>
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2 text-right font-semibold">
-                    {formatearMoneda(item.subtotal)}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2 text-center">
-                    <button
-                      onClick={() => handleEliminarItem(item.id)}
-                      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-sm"
-                    >
-                      Eliminar
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <div className="inline-block min-w-full align-middle">
+              <table className="w-full border-collapse border border-gray-300 min-w-[800px]">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 px-2 sm:px-4 py-2 text-left text-xs sm:text-sm">
+                      Descripción
+                    </th>
+                    <th className="border border-gray-300 px-2 sm:px-4 py-2 text-center text-xs sm:text-sm">
+                      Cant.
+                    </th>
+                    <th className="border border-gray-300 px-2 sm:px-4 py-2 text-right text-xs sm:text-sm">
+                      Precio Uni.
+                    </th>
+                    <th className="border border-gray-300 px-2 sm:px-4 py-2 text-center text-xs sm:text-sm">
+                      % Desc.
+                    </th>
+                    <th className="border border-gray-300 px-2 sm:px-4 py-2 text-right text-xs sm:text-sm">
+                      Subtotal
+                    </th>
+                    <th className="border border-gray-300 px-2 sm:px-4 py-2 text-center text-xs sm:text-sm">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((item) => (
+                    <tr key={item.id} className="hover:bg-gray-50">
+                      <td className="border border-gray-300 px-2 sm:px-4 py-2">
+                        <div className="font-medium text-gray-800 text-xs sm:text-sm">{item.descripcion}</div>
+                        <div className="text-xs text-gray-500 mt-1 hidden sm:block">
+                          (Desde base de datos)
+                        </div>
+                      </td>
+                      <td className="border border-gray-300 px-2 sm:px-4 py-2">
+                        <div className="flex items-center border border-gray-200 rounded overflow-hidden w-fit mx-auto">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleEditarItem(
+                                item.id,
+                                'cantidad',
+                                Math.max(0.01, item.cantidad - 1)
+                              )
+                            }
+                            className="px-1 sm:px-1.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs sm:text-sm transition-colors"
+                            title="Disminuir cantidad"
+                          >
+                            -
+                          </button>
+                          <input
+                            type="number"
+                            min="0.01"
+                            step="0.01"
+                            value={item.cantidad}
+                            onChange={(e) =>
+                              handleEditarItem(
+                                item.id,
+                                'cantidad',
+                                parseFloat(e.target.value) || 0
+                              )
+                            }
+                            className="w-12 sm:w-14 px-1 py-1 text-xs sm:text-sm text-center focus:outline-none focus:ring-1 focus:ring-blue-500 border-0"
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleEditarItem(
+                                item.id,
+                                'cantidad',
+                                item.cantidad + 1
+                              )
+                            }
+                            className="px-1 sm:px-1.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs sm:text-sm transition-colors"
+                            title="Aumentar cantidad"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </td>
+                      <td className="border border-gray-300 px-2 sm:px-4 py-2 text-right">
+                        <div className="font-semibold text-gray-800 text-xs sm:text-sm">
+                          {formatearMoneda(item.precioUnitario)}
+                        </div>
+                        <div className="text-xs text-gray-500 hidden sm:block">
+                          (Desde base de datos)
+                        </div>
+                      </td>
+                      <td className="border border-gray-300 px-2 sm:px-4 py-2">
+                        <div className="flex items-center gap-1">
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            step="0.01"
+                            value={item.descuento}
+                            onChange={(e) =>
+                              handleEditarItem(
+                                item.id,
+                                'descuento',
+                                parseFloat(e.target.value) || 0
+                              )
+                            }
+                            className="w-full px-1 sm:px-2 py-1 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-center text-xs sm:text-sm"
+                          />
+                          <span className="text-gray-500 text-xs">%</span>
+                        </div>
+                      </td>
+                      <td className="border border-gray-300 px-2 sm:px-4 py-2 text-right font-semibold text-xs sm:text-sm">
+                        {formatearMoneda(item.subtotal)}
+                      </td>
+                      <td className="border border-gray-300 px-2 sm:px-4 py-2 text-center">
+                        <button
+                          onClick={() => handleEliminarItem(item.id)}
+                          className="px-2 sm:px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-xs sm:text-sm whitespace-nowrap"
+                        >
+                          Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       )}
     </div>
